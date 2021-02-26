@@ -5,6 +5,7 @@
 
 import pygame
 from player import Player
+from alien import Alien
 
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
@@ -33,15 +34,16 @@ class Game:
         # Boolean variable to start/stop game
         self.continueGame = True
 
-    def updateScreen(self, player):
+    def updateScreen(self, player, alien):
 
         # OBJECTIVE: Update all changes made on screen
 
         # Color screen's background
         self.screen.fill(BLACK)
 
-        # Update sprites
+        # Draw all sprites
         player.draw()
+        alien.draw()
 
         # Update screen
         pygame.display.flip()
@@ -56,6 +58,9 @@ class Game:
         # Create player
         player = Player(self, self.width // 2, self.height - 20)
 
+        # Create alien
+        alien = Alien(self, 30, 30)
+
         while self.continueGame:
 
             # Check if window was closed
@@ -65,7 +70,7 @@ class Game:
                     self.continueGame = False
 
             # Update screen
-            self.updateScreen(player)
+            self.updateScreen(player, alien)
 
         # Stop pygame
         pygame.quit()

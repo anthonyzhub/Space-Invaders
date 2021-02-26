@@ -22,6 +22,6 @@ class Player(pygame.sprite.Sprite):
     def draw(self):
 
         # OBJECTIVE: Draw ship on screen
-        # print("Calling from player.draw()")
+        
         spriteSpecs = pygame.Rect(self.xPosition, self.yPosition, 25, 10)
         pygame.draw.rect(self.game.screen, RED, spriteSpecs)
