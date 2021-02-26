@@ -1,80 +1,76 @@
 #! /usr/bin/python3
 
+# Reference: https://itnext.io/creating-space-invaders-clone-in-pygame-ea0f5336c677
+# Reference: https://github.com/janjilecek/pygame-invaders/blob/master/main.py
+
 import pygame
 from player import Player
 
-SCREEN_LENGTH = 840
-SCREEN_HEIGHT = 720
-
-WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
+RED = (255, 0, 0)
 
-def updateScreen(screen, clock, allSpritesList):
+class Game:
 
-    # OBJECTIVE: Update all changes on the screen
+    screen = None
+    aliens = list()
 
-    # Make screen's background to black
-    screen.fill(BLACK)
+    def __init__(self, width, height):
 
-    # Draw all sprites on the window
-    allSpritesList.draw(screen)
+        # Initialize pygame
+        pygame.init()
 
-    # Update screen
-    pygame.display.flip()
+        # Get screen dimensions
+        self.width = width
+        self.height = height
 
-    # Update clock
-    clock.tick(60)
+        # Create a window
+        self.screen = pygame.display.set_mode((self.width, self.height))
 
-def playerMovements(keysPressed, player):
+        # Initialize pygame's clock for FPS
+        self.clock = pygame.time.Clock()
 
-    # OBJECTIVE: Respond to keys pressed
+        # Boolean variable to start/stop game
+        self.continueGame = True
 
-    if keysPressed[pygame.K_LEFT]:
-        player.moveLeft(5)
+    def updateScreen(self, player):
 
-    if keysPressed[pygame.K_RIGHT]:
-        player.moveRight(5)
+        # OBJECTIVE: Update all changes made on screen
+
+        # Color screen's background
+        self.screen.fill(BLACK)
+
+        # Update sprites
+        player.draw()
+
+        # Update screen
+        pygame.display.flip()
+
+        # Set FPS
+        self.clock.tick(60)
+
+    def mainLoop(self):
+
+        # OBJECTIVE: Main function that controls the game
+
+        # Create player
+        player = Player(self, self.width // 2, self.height - 20)
+
+        while self.continueGame:
+
+            # Check if window was closed
+            for event in pygame.event.get():
+
+                if event.type == pygame.QUIT:
+                    self.continueGame = False
+
+            # Update screen
+            self.updateScreen(player)
+
+        # Stop pygame
+        pygame.quit()
 
 if __name__ == "__main__":
 
-    # Initialize pygame
-    pygame.init()
-
-    # Create a window
-    screen = pygame.display.set_mode((SCREEN_LENGTH, SCREEN_HEIGHT))
-    pygame.display.set_caption("Space Invaders!")
-
-    # Draw sprites
-    player = Player(WHITE, 25, 15)
-    player.rect.x = SCREEN_LENGTH // 2
-    player.rect.y = SCREEN_HEIGHT - 20
-
-    # Add all sprites to list
-    allSpritesList = pygame.sprite.Group()
-    allSpritesList.add(player)
-
-    # Game's on/off status
-    continueGame = True
-
-    # Initialize clock for FPS
-    clock = pygame.time.Clock()
-
-    while continueGame:
-        
-        # Exit game
-        for key in pygame.event.get():
-
-            if key.type == pygame.QUIT:
-                continueGame = False
-
-        # Get keyboard input
-        keysPressed = pygame.key.get_pressed()
-        playerMovements(keysPressed, player)
-
-        # Update sprite's positions
-        allSpritesList.update()
-
-        # Update screen
-        updateScreen(screen, clock, allSpritesList)
-
-    pygame.quit()
+    game = Game(840, 720)
+    game.mainLoop()
