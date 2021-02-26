@@ -14,8 +14,13 @@ class Alien:
     def draw(self):
 
         # OBJECTIVE: Draw alien on screen
+
+        # Draw alien
         spriteSpecs = pygame.Rect(self.xPosition, self.yPosition, 30, 30)
         pygame.draw.rect(self.game.screen, GREEN, spriteSpecs)
+
+        # Adjust alien speed
+        self.yPosition += .05
 
 class Generator:
 
