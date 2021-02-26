@@ -2,38 +2,26 @@ import pygame
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
+RED = (255, 0, 0)
 
 SCREEN_LENGTH = 840
 SCREEN_HEIGHT = 720 
 
 class Player(pygame.sprite.Sprite):
 
-    def __init__(self, color, width, height):
+    def __init__(self, game, xPosition, yPosition):
 
         # Initialize parent class
         super().__init__()
 
-        # Create ship
-        self.image = pygame.Surface([width, height])
-        self.image.fill(WHITE)
-        self.image.set_colorkey(BLACK)
+        # Declare variables
+        self.game = game
+        self.xPosition = xPosition
+        self.yPosition = yPosition
 
-        # Draw ship on screen
-        pygame.draw.rect(self.image, color, [0, 0, width, height])
+    def draw(self):
 
-        # Get ship's dimensions
-        self.rect = self.image.get_rect()
-
-    def moveLeft(self, pixels):
-
-        self.rect.x -= pixels
-
-        if self.rect.x < 0:
-            self.rect.x = 0
-
-    def moveRight(self, pixels):
-
-        self.rect.x += pixels
-
-        if self.rect.x > 810:
-            self.rect.x = 810
+        # OBJECTIVE: Draw ship on screen
+        
+        spriteSpecs = pygame.Rect(self.xPosition, self.yPosition, 25, 10)
+        pygame.draw.rect(self.game.screen, RED, spriteSpecs)
