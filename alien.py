@@ -1,6 +1,8 @@
 import pygame
 
 GREEN = (0, 255, 00)
+LENGTH = 30
+HEIGHT = 30
 
 class Alien:
 
@@ -16,11 +18,53 @@ class Alien:
         # OBJECTIVE: Draw alien on screen
 
         # Draw alien
-        spriteSpecs = pygame.Rect(self.xPosition, self.yPosition, 30, 30)
+        spriteSpecs = pygame.Rect(self.xPosition, self.yPosition, LENGTH, HEIGHT)
         pygame.draw.rect(self.game.screen, GREEN, spriteSpecs)
 
         # Adjust alien speed
         self.yPosition += .05
+
+    def detectCollision(self):
+
+        # OBJECTIVE: Delete alien if a bullet hits it
+
+        for firedBullet in self.game.bulletList:
+
+            # print("Bullet's X > self.xPosition: {}".format(firedBullet.xPosition > self.xPosition))
+            # print("Bullet's X > self.xPosition + LENGTH: {}".format(firedBullet.xPosition > self.xPosition + LENGTH))
+            # print("Bullet's Y < self.yPosition: {}".format(firedBullet.yPosition < self.yPosition))
+            # print("Bullet's Y < self.yPosition + HEIGHT: {}".format(firedBullet.yPosition < self.yPosition + HEIGHT))
+            # print()
+
+            if (firedBullet.xPosition > self.xPosition and
+                firedBullet.xPosition < self.xPosition + LENGTH and
+                firedBullet.yPosition > self.yPosition and
+                firedBullet.yPosition < self.yPosition + HEIGHT):
+
+                    print("Alien got hit")
+
+                    # Remove and delete bullet from list
+                    self.game.bulletList.remove(firedBullet)
+                    del firedBullet
+
+                    # Remove and delete alien from list
+                    self.game.aliensList.remove(self)
+                    del self
+            
+            # if (firedBullet.xPosition > self.xPosition and
+            #     firedBullet.xPosition > self.xPosition + LENGTH and
+            #     firedBullet.yPosition < self.yPosition and
+            #     firedBullet.yPosition < self.yPosition + HEIGHT):
+
+            #     print("Alien got hit")
+
+            #     # Remove and delete bullet from list
+            #     self.game.bulletList.remove(firedBullet)
+            #     del firedBullet
+
+            #     # Remove and delete alien from list
+            #     self.game.aliensList.remove(self)
+            #     del self
 
 class Generator:
 
