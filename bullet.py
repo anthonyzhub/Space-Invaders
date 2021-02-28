@@ -1,26 +1,37 @@
 import pygame
 
-RED = (255, 0, 0)
-BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
 
-class Bullet(pygame.sprite.Sprite):
+class Bullet:
 
-    def __init__(self, width, height):
+    LENGTH = 2
+    HEIGHT = 4
 
-        # Initialize parent class
-        super().__init__()
+    def __init__(self, game, xPosition, yPosition):
 
-        # Create builet
-        self.image = pygame.Surface([width, height])
-        self.image.fill(RED)
-        self.image.set_colorkey(BLACK)
+        # Declare variables
+        self.game = game
+        self.xPosition = xPosition
+        self.yPosition = yPosition
+
+    def draw(self):
+
+        # OBJECTIVE: Draw bullet for player
 
         # Draw bullet on screen
-        pygame.draw.rect(self.image, RED, [0, 0, width, height])
+        spriteSpec = pygame.Rect(self.xPosition, self.yPosition, self.LENGTH, self.HEIGHT)
+        pygame.draw.rect(self.game.screen, WHITE, spriteSpec)
 
-        # Get bullet's dimensions
-        self.rect = self.image.get_rect()
+        # Adjust speed
+        self.yPosition -= 2
 
-    def moveUp(self, pixels):
+    def drawForAlien(self):
 
-        self.rect.y -= pixels
+        # OBJECTIVE: Draw bullet for alien
+
+        # Draw bullet
+        spriteSpecs = pygame.Rect(self.xPosition, self.yPosition, self.LENGTH, self.HEIGHT)
+        pygame.draw.rect(self.game.screen, WHITE, spriteSpecs)
+
+        # Adjust speed specifically for alien
+        self.yPosition += 2

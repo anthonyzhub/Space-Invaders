@@ -1,10 +1,11 @@
 import pygame
 
 GREEN = (0, 255, 00)
-LENGTH = 30
-HEIGHT = 30
 
 class Alien:
+
+    LENGTH = 30
+    HEIGHT = 30
 
     def __init__(self, game, xPosition, yPosition):
 
@@ -18,7 +19,7 @@ class Alien:
         # OBJECTIVE: Draw alien on screen
 
         # Draw alien
-        spriteSpecs = pygame.Rect(self.xPosition, self.yPosition, LENGTH, HEIGHT)
+        spriteSpecs = pygame.Rect(self.xPosition, self.yPosition, self.LENGTH, self.HEIGHT)
         pygame.draw.rect(self.game.screen, GREEN, spriteSpecs)
 
         # Adjust alien speed
@@ -28,17 +29,17 @@ class Alien:
 
         # OBJECTIVE: Delete alien if a bullet hits it
 
-        for firedBullet in self.game.bulletList:
+        for firedBullet in self.game.heroBulletsList:
 
             if (firedBullet.xPosition > self.xPosition and
-                firedBullet.xPosition < self.xPosition + LENGTH and
+                firedBullet.xPosition < self.xPosition + self.LENGTH and
                 firedBullet.yPosition > self.yPosition and
-                firedBullet.yPosition < self.yPosition + HEIGHT):
+                firedBullet.yPosition < self.yPosition + self.HEIGHT):
 
                     print("Alien, {}, got hit".format(self))
 
                     # Remove and delete bullet from list
-                    self.game.bulletList.remove(firedBullet)
+                    self.game.heroBulletsList.remove(firedBullet)
                     # del firedBullet # NOTE <= del and remove() both remove x element
 
                     # Remove and delete alien from list

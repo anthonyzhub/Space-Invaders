@@ -5,7 +5,8 @@
 
 import pygame
 from player import Player
-from player import Bullet
+# from player import Bullet
+from bullet import Bullet
 from alien import Alien
 from alien import Generator
 
@@ -17,7 +18,8 @@ class Game:
 
     screen = None
     aliensList = list()
-    bulletList = list()
+    heroBulletsList = list()
+    alienBulletsList = list()
 
     def __init__(self, width, height):
 
@@ -50,8 +52,11 @@ class Game:
         for alien in self.aliensList:
             alien.draw()
 
-        for bullet in self.bulletList:
-            bullet.draw()
+        for heroBullet in self.heroBulletsList:
+            heroBullet.draw()
+
+        for alienBullet in self.alienBulletsList:
+            alienBullet.drawForAlien()
 
         # Update screen
         pygame.display.flip()
@@ -59,37 +64,68 @@ class Game:
         # Set FPS
         self.clock.tick(60)
 
-    def deleteBullets(self):
+    def deleteHerosBullets(self):
 
         # OBJECTIVE: Delete bullets from list once they leave the screen
 
         # Exit if list is empty
-        if len(self.bulletList) == 0:
+        if len(self.heroBulletsList) == 0:
             return None
 
         # Iterate list and check if a bullet left the screen
-        for firedBullet in self.bulletList:
+        for firedBullet in self.heroBulletsList:
 
             if firedBullet.yPosition <= 0:
                 print("Deleting {}".format(firedBullet))
 
                 # Remove bullet from list
-                self.bulletList.remove(firedBullet)
+                self.heroBulletsList.remove(firedBullet)
 
                 # Delete bullet
                 # del firedBullet
 
-    def fireBullets(self, player):
+    def heroFiresBullet(self, player):
 
         # OBJECTIVE: Fire at most 3 bullets when space bar is pressed
 
         # Exit if more than 3 bullets were fired
-        if len(self.bulletList) >= 3:
+        if len(self.heroBulletsList) >= 3:
             print("3 bullets were already fired")
             return None
 
         # Create and add new bullet to list
-        self.bulletList.append(Bullet(self, player.xPosition, player.yPosition))
+        self.heroBulletsList.append(Bullet(self, player.xPosition, player.yPosition))
+
+    def deleteAlienBullets(self):
+
+        # OBJECTIVE: Delete bullets fired from aliens if they left the screen
+
+        for alienBullet in self.alienBulletsList:
+
+            if alienBullet.yPosition > self.height:
+                self.alienBulletsList.remove(alienBullet)
+
+    def alienFiresBullet(self, player):
+
+        # OBJECTIVE: Let a few aliens fire back
+
+        # Only let aliens fire 5 times
+        if len(self.alienBulletsList) > 5:
+            return None
+
+        # Allow certain aliens to shoot
+        margin = 0
+        for alien in self.aliensList:
+            
+            # If alien is within player's x-position, then fire a bullet
+            if (alien.xPosition > player.xPosition - margin and
+                alien.xPosition < player.xPosition + player.LENGTH + margin):
+
+                    # Exit if 5 bullets were already taken.
+                    if len(self.alienBulletsList) >= 5:
+                        break
+
+                    self.alienBulletsList.append(Bullet(self, alien.xPosition, alien.yPosition))
 
     def alienCollision(self):
 
@@ -123,7 +159,7 @@ class Game:
                 # When spacebar is pressed, fire bullets
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_SPACE:
-                        self.fireBullets(player)
+                        self.heroFiresBullet(player)
 
             # Get keys pressed
             keysPressed = pygame.key.get_pressed()
@@ -138,8 +174,12 @@ class Game:
             # Delete aliens that were hit by bullets
             self.alienCollision()
 
+            # Let the aliens fireback
+            self.alienFiresBullet(player)
+
             # Delete fired bullets that left the screen
-            self.deleteBullets()
+            self.deleteHerosBullets()
+            self.deleteAlienBullets()
 
             # Update screen
             self.updateScreen(player)
