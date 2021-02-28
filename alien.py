@@ -30,41 +30,20 @@ class Alien:
 
         for firedBullet in self.game.bulletList:
 
-            # print("Bullet's X > self.xPosition: {}".format(firedBullet.xPosition > self.xPosition))
-            # print("Bullet's X > self.xPosition + LENGTH: {}".format(firedBullet.xPosition > self.xPosition + LENGTH))
-            # print("Bullet's Y < self.yPosition: {}".format(firedBullet.yPosition < self.yPosition))
-            # print("Bullet's Y < self.yPosition + HEIGHT: {}".format(firedBullet.yPosition < self.yPosition + HEIGHT))
-            # print()
-
             if (firedBullet.xPosition > self.xPosition and
                 firedBullet.xPosition < self.xPosition + LENGTH and
                 firedBullet.yPosition > self.yPosition and
                 firedBullet.yPosition < self.yPosition + HEIGHT):
 
-                    print("Alien got hit")
+                    print("Alien, {}, got hit".format(self))
 
                     # Remove and delete bullet from list
                     self.game.bulletList.remove(firedBullet)
-                    del firedBullet
+                    # del firedBullet # NOTE <= del and remove() both remove x element
 
                     # Remove and delete alien from list
                     self.game.aliensList.remove(self)
-                    del self
-            
-            # if (firedBullet.xPosition > self.xPosition and
-            #     firedBullet.xPosition > self.xPosition + LENGTH and
-            #     firedBullet.yPosition < self.yPosition and
-            #     firedBullet.yPosition < self.yPosition + HEIGHT):
-
-            #     print("Alien got hit")
-
-            #     # Remove and delete bullet from list
-            #     self.game.bulletList.remove(firedBullet)
-            #     del firedBullet
-
-            #     # Remove and delete alien from list
-            #     self.game.aliensList.remove(self)
-            #     del self
+                    # del self
 
 class Generator:
 

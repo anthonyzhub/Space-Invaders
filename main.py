@@ -77,7 +77,7 @@ class Game:
                 self.bulletList.remove(firedBullet)
 
                 # Delete bullet
-                del firedBullet
+                # del firedBullet
 
     def fireBullets(self, player):
 
