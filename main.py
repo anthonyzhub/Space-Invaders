@@ -94,7 +94,7 @@ class Game:
             return None
 
         # Create and add new bullet to list
-        self.heroBulletsList.append(Bullet(self, player.xPosition, player.yPosition))
+        self.heroBulletsList.append(Bullet(self, player.xPosition + (player.LENGTH // 2), player.yPosition))
 
     def deleteAlienBullets(self):
 
@@ -125,7 +125,7 @@ class Game:
                     if len(self.alienBulletsList) >= 5:
                         break
 
-                    self.alienBulletsList.append(Bullet(self, alien.xPosition, alien.yPosition))
+                    self.alienBulletsList.append(Bullet(self, alien.xPosition + (alien.LENGTH // 2), alien.yPosition))
 
     def alienCollision(self):
 
