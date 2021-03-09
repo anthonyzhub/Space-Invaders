@@ -6,6 +6,7 @@ class Alien:
 
     LENGTH = 30
     HEIGHT = 30
+    # SPEED = .05
 
     def __init__(self, game, xPosition, yPosition):
 
@@ -14,6 +15,55 @@ class Alien:
         self.xPosition = xPosition
         self.yPosition = yPosition
 
+        # Keep track ship of movements
+        self.timesMovedRight = 0
+        self.timesMovedLeft = 0
+        self.goRight = True # NOTE: Start game by having aliens move right first
+        self.goLeft = False
+
+    def moveDown(self):
+        self.yPosition += 1
+
+    def moveRight(self):
+        
+        # OBJECTIVE: Move alien limited times to the right
+
+        # Update xPosition and counter variable
+        self.xPosition += 1
+        self.timesMovedRight += 1
+
+        if self.timesMovedRight == 15:
+
+            # Reset counter
+            self.timesMovedRight = 0
+
+            # Update boolean variables
+            self.goRight = False
+            self.goLeft = True
+
+            # Move alien down
+            self.moveDown()
+
+    def moveLeft(self):
+        
+        # OBJECTIVE: Move alien limited times to the left
+
+        # Update xPosition and counter variable
+        self.xPosition -= 1
+        self.timesMovedLeft += 1
+
+        if self.timesMovedLeft == 15:
+
+            # Reset counter
+            self.timesMovedLeft = 0
+
+            # Update boolean variables
+            self.goLeft = False
+            self.goRight = True
+
+            # Move alien down
+            self.moveDown()
+
     def draw(self):
 
         # OBJECTIVE: Draw alien on screen
@@ -21,9 +71,15 @@ class Alien:
         # Draw alien
         spriteSpecs = pygame.Rect(self.xPosition, self.yPosition, self.LENGTH, self.HEIGHT)
         pygame.draw.rect(self.game.screen, GREEN, spriteSpecs)
+            
+        # Move alien side-by-side
+        if self.goRight == True:
+            self.moveRight()
+        elif self.goLeft == True:
+            self.moveLeft()
 
         # Adjust alien speed
-        self.yPosition += .05
+        # self.yPosition += .05
 
     def detectCollision(self):
 
@@ -52,7 +108,7 @@ class Generator:
 
         # Alien's personal bubble
         margin = 30
-        width = 50
+        width = 50 # NOTE: Affects how many alien ships can fit in one row
 
         # NOTE: Aliens are created from top to bottom, then moves on to next column
         # Create more aliens
