@@ -134,6 +134,19 @@ class Game:
         for alien in self.aliensList:
             alien.detectCollision()
 
+    def heroCollision(self, player):
+
+        # OBJECTIVE: Check if hero got hit by a bullet
+        player.detectCollision()
+
+    def isGameOver(self, player):
+
+        # OBJECTIVE: Update boolean variable if doesn't have enough lives left
+
+        if player.livesLeft() == False:
+            print("Game Over!")
+            self.continueGame = False
+
     def mainLoop(self):
 
         # OBJECTIVE: Main function that controls the game
@@ -176,6 +189,12 @@ class Game:
 
             # Let the aliens fireback
             self.alienFiresBullet(player)
+
+            # Check if hero got hit by a bullet
+            self.heroCollision(player)
+
+            # Check if hero has enough lives to continue
+            self.isGameOver(player)
 
             # Delete fired bullets that left the screen
             self.deleteHerosBullets()
