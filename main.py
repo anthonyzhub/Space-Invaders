@@ -8,7 +8,9 @@ from player import Player
 # from player import Bullet
 from bullet import Bullet
 from alien import Alien
-from alien import Generator
+from alien import Generator as aGenerator
+from barrier import Barrier
+from barrier import Generator as bGenerator
 
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
@@ -20,6 +22,7 @@ class Game:
     aliensList = list()
     heroBulletsList = list()
     alienBulletsList = list()
+    barriersList = list()
 
     def __init__(self, width, height):
 
@@ -57,6 +60,9 @@ class Game:
 
         for alienBullet in self.alienBulletsList:
             alienBullet.drawForAlien()
+
+        for barrier in self.barriersList:
+            barrier.draw()
 
         # Update screen
         pygame.display.flip()
@@ -139,7 +145,23 @@ class Game:
         # OBJECTIVE: Check if hero got hit by a bullet
         player.detectCollision()
 
-    def isGameOver(self, player):
+    def barrierCollision(self):
+
+        # OBJECTIVE: Check if any barrier got hit
+
+        for barrier in self.barriersList:
+            barrier.detectCollision()
+
+    def barrierLives(self):
+
+        # OBJECTIVE: Delete barrier, if it doesn't have enough lives
+
+        for barrier in self.barriersList:
+
+            if barrier.livesLeft() == False:
+                self.barriersList.remove(barrier)
+
+    def playerLives(self, player):
 
         # OBJECTIVE: Update boolean variable if doesn't have enough lives left
 
@@ -158,7 +180,13 @@ class Game:
         alien = Alien(self, 30, 30)
 
         # Create alien generator
-        generator = Generator(self)
+        alienGenerator = aGenerator(self)
+
+        # Create barrier
+        # barrier = Barrier(self, 30, self.height - 40)
+
+        # Create generator for barrier
+        barrierGenerator = bGenerator(self)
 
         while self.continueGame:
 
@@ -190,11 +218,17 @@ class Game:
             # Let the aliens fireback
             self.alienFiresBullet(player)
 
+            # Check if any barriers got hit by an alien bullet
+            self.barrierCollision()
+
+            # Update barriers' life points
+            self.barrierLives()
+
             # Check if hero got hit by a bullet
             self.heroCollision(player)
 
             # Check if hero has enough lives to continue
-            self.isGameOver(player)
+            self.playerLives(player)
 
             # Delete fired bullets that left the screen
             self.deleteHerosBullets()
