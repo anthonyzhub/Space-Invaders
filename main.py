@@ -5,7 +5,6 @@
 
 import pygame
 from player import Player
-# from player import Bullet
 from bullet import Bullet
 from alien import Alien
 from alien import Generator as aGenerator
@@ -86,9 +85,6 @@ class Game:
 
                 # Remove bullet from list
                 self.heroBulletsList.remove(firedBullet)
-
-                # Delete bullet
-                # del firedBullet
 
     def heroFiresBullet(self, player):
 
@@ -182,10 +178,7 @@ class Game:
         # Create alien generator
         alienGenerator = aGenerator(self)
 
-        # Create barrier
-        # barrier = Barrier(self, 30, self.height - 40)
-
-        # Create generator for barrier
+        # Create barriers by using a generator
         barrierGenerator = bGenerator(self)
 
         while self.continueGame:

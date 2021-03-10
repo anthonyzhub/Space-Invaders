@@ -10,10 +10,6 @@ class Barrier:
     LENGTH = 100
     HEIGHT = 15
 
-    # Adjusted dimensions
-    MIDLENGTH = LENGTH - 25
-    SMLENGTH = LENGTH - 50
-
     def __init__(self, game, xPosition, yPosition):
 
         self.game = game
@@ -38,14 +34,14 @@ class Barrier:
         elif self.lives == 2:
 
             # Draw dimensions and sprite
-            spriteSpecs = pygame.Rect(self.xPosition, self.yPosition, self.MIDLENGTH, self.HEIGHT)
+            spriteSpecs = pygame.Rect(self.xPosition, self.yPosition, self.LENGTH - 25, self.HEIGHT)
             pygame.draw.rect(self.game.screen, PURPLE, spriteSpecs)
 
         # elif self.lives == 1:
         else:
 
             # Draw dimensions and sprite
-            spriteSpecs = pygame.Rect(self.xPosition, self.yPosition, self.SMLENGTH, self.HEIGHT)
+            spriteSpecs = pygame.Rect(self.xPosition, self.yPosition, self.LENGTH - 50, self.HEIGHT)
             pygame.draw.rect(self.game.screen, RED, spriteSpecs)
 
     def detectCollision(self):
