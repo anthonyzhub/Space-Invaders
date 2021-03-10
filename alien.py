@@ -1,4 +1,5 @@
 import pygame
+from datetime import datetime as dt
 
 GREEN = (0, 255, 00)
 
@@ -21,6 +22,9 @@ class Alien:
         self.goRight = True # NOTE: Start game by having aliens move right first
         self.goLeft = False
 
+        # Get current time for future use
+        self.oldTime = dt.now()
+
     def moveDown(self):
         self.yPosition += 1
 
@@ -29,10 +33,10 @@ class Alien:
         # OBJECTIVE: Move alien limited times to the right
 
         # Update xPosition and counter variable
-        self.xPosition += 1
+        self.xPosition += 10
         self.timesMovedRight += 1
 
-        if self.timesMovedRight == 15:
+        if self.timesMovedRight == 3:
 
             # Reset counter
             self.timesMovedRight = 0
@@ -49,10 +53,10 @@ class Alien:
         # OBJECTIVE: Move alien limited times to the left
 
         # Update xPosition and counter variable
-        self.xPosition -= 1
+        self.xPosition -= 10
         self.timesMovedLeft += 1
 
-        if self.timesMovedLeft == 15:
+        if self.timesMovedLeft == 3:
 
             # Reset counter
             self.timesMovedLeft = 0
@@ -64,6 +68,26 @@ class Alien:
             # Move alien down
             self.moveDown()
 
+    def getTimeDifference(self):
+
+        # OBJECTIVE: If 5 seconds have passed, alien can move
+
+        # Calculate time difference and convert it to seconds
+        currTime = dt.now()
+        timeDifference = (currTime - self.oldTime).total_seconds()
+
+        # True, if 5 seconds have passed
+        if timeDifference >= 5:
+
+            # Update oldTime variable
+            self.oldTime = dt.now()
+
+            # Return true to move alien
+            return True
+
+        # Return false to stop alien from moving
+        return False
+
     def draw(self):
 
         # OBJECTIVE: Draw alien on screen
@@ -71,11 +95,14 @@ class Alien:
         # Draw alien
         spriteSpecs = pygame.Rect(self.xPosition, self.yPosition, self.LENGTH, self.HEIGHT)
         pygame.draw.rect(self.game.screen, GREEN, spriteSpecs)
-            
+
+        # Check if alien can move
+        canAlienMove = self.getTimeDifference()
+
         # Move alien side-by-side
-        if self.goRight == True:
+        if self.goRight == True and canAlienMove == True:
             self.moveRight()
-        elif self.goLeft == True:
+        elif self.goLeft == True and canAlienMove == True:
             self.moveLeft()
 
         # Adjust alien speed
@@ -95,12 +122,14 @@ class Alien:
                     print("Alien, {}, got hit".format(self))
 
                     # Remove and delete bullet from list
+                    # NOTE: del and remove() both remove x element
                     self.game.heroBulletsList.remove(firedBullet)
-                    # del firedBullet # NOTE <= del and remove() both remove x element
 
                     # Remove and delete alien from list
                     self.game.aliensList.remove(self)
-                    # del self
+                    
+                    # Increment aliens' destroyed counter
+                    self.game.currAliensDestroyed += 1
 
 class Generator:
 

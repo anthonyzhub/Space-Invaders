@@ -5,10 +5,11 @@
 
 import pygame
 from player import Player
-# from player import Bullet
 from bullet import Bullet
 from alien import Alien
-from alien import Generator
+from alien import Generator as aGenerator
+from barrier import Barrier
+from barrier import Generator as bGenerator
 
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
@@ -17,9 +18,18 @@ RED = (255, 0, 0)
 class Game:
 
     screen = None
+
+    # Declare list per sprites
     aliensList = list()
     heroBulletsList = list()
     alienBulletsList = list()
+    barriersList = list()
+
+    # Declare variables for aliens for future use
+    # NOTE: This is to adjust how many aliens can fire back based on how many aliens have been destroyed
+    currAliensDestroyed = 0
+    aliensFiringRate = 5
+    oldAliensDestroyed = currAliensDestroyed
 
     def __init__(self, width, height):
 
@@ -58,6 +68,9 @@ class Game:
         for alienBullet in self.alienBulletsList:
             alienBullet.drawForAlien()
 
+        for barrier in self.barriersList:
+            barrier.draw()
+
         # Update screen
         pygame.display.flip()
 
@@ -80,9 +93,6 @@ class Game:
 
                 # Remove bullet from list
                 self.heroBulletsList.remove(firedBullet)
-
-                # Delete bullet
-                # del firedBullet
 
     def heroFiresBullet(self, player):
 
@@ -109,23 +119,39 @@ class Game:
 
         # OBJECTIVE: Let a few aliens fire back
 
-        # Only let aliens fire 5 times
-        if len(self.alienBulletsList) > 5:
+        # Only let aliens fire a certain amount of times
+        if len(self.alienBulletsList) > self.aliensFiringRate:
             return None
 
         # Allow certain aliens to shoot
-        margin = 0
+        margin = 10
         for alien in self.aliensList:
             
             # If alien is within player's x-position, then fire a bullet
             if (alien.xPosition > player.xPosition - margin and
                 alien.xPosition < player.xPosition + player.LENGTH + margin):
 
-                    # Exit if 5 bullets were already taken.
-                    if len(self.alienBulletsList) >= 5:
+                    # Exit if certain amount of bullets were already taken.
+                    if len(self.alienBulletsList) >= self.aliensFiringRate:
                         break
 
                     self.alienBulletsList.append(Bullet(self, alien.xPosition + (alien.LENGTH // 2), alien.yPosition))
+
+    def adjustAliensFiringRate(self):
+
+        # OBJECTIVE: Adjust firing rate of bullets based on how many aliens were destroyed
+
+        # If-condition was added to stop increasing firing rate, if "self.aliensDestroyed" was stuck on a multiple of 5
+        if self.currAliensDestroyed != self.oldAliensDestroyed:
+
+            # For every 5th alien destoryed, allow 3 more aliens to shoot
+            if self.currAliensDestroyed % 5 == 0:
+
+                # Update firing rate
+                self.aliensFiringRate += 3
+
+                # Update placeholder
+                self.oldAliensDestroyed = self.currAliensDestroyed
 
     def alienCollision(self):
 
@@ -139,7 +165,23 @@ class Game:
         # OBJECTIVE: Check if hero got hit by a bullet
         player.detectCollision()
 
-    def isGameOver(self, player):
+    def barrierCollision(self):
+
+        # OBJECTIVE: Check if any barrier got hit
+
+        for barrier in self.barriersList:
+            barrier.detectCollision()
+
+    def barrierLives(self):
+
+        # OBJECTIVE: Delete barrier, if it doesn't have enough lives
+
+        for barrier in self.barriersList:
+
+            if barrier.livesLeft() == False:
+                self.barriersList.remove(barrier)
+
+    def playerLives(self, player):
 
         # OBJECTIVE: Update boolean variable if doesn't have enough lives left
 
@@ -158,7 +200,10 @@ class Game:
         alien = Alien(self, 30, 30)
 
         # Create alien generator
-        generator = Generator(self)
+        alienGenerator = aGenerator(self)
+
+        # Create barriers by using a generator
+        barrierGenerator = bGenerator(self)
 
         while self.continueGame:
 
@@ -187,14 +232,23 @@ class Game:
             # Delete aliens that were hit by bullets
             self.alienCollision()
 
+            # Adjust aliens' firing rate
+            self.adjustAliensFiringRate()
+
             # Let the aliens fireback
             self.alienFiresBullet(player)
+
+            # Check if any barriers got hit by an alien bullet
+            self.barrierCollision()
+
+            # Update barriers' life points
+            self.barrierLives()
 
             # Check if hero got hit by a bullet
             self.heroCollision(player)
 
             # Check if hero has enough lives to continue
-            self.isGameOver(player)
+            self.playerLives(player)
 
             # Delete fired bullets that left the screen
             self.deleteHerosBullets()
