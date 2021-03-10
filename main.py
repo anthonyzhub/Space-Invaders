@@ -18,10 +18,18 @@ RED = (255, 0, 0)
 class Game:
 
     screen = None
+
+    # Declare list per sprites
     aliensList = list()
     heroBulletsList = list()
     alienBulletsList = list()
     barriersList = list()
+
+    # Declare variables for aliens for future use
+    # NOTE: This is to adjust how many aliens can fire back based on how many aliens have been destroyed
+    currAliensDestroyed = 0
+    aliensFiringRate = 5
+    oldAliensDestroyed = currAliensDestroyed
 
     def __init__(self, width, height):
 
@@ -111,23 +119,39 @@ class Game:
 
         # OBJECTIVE: Let a few aliens fire back
 
-        # Only let aliens fire 5 times
-        if len(self.alienBulletsList) > 5:
+        # Only let aliens fire a certain amount of times
+        if len(self.alienBulletsList) > self.aliensFiringRate:
             return None
 
         # Allow certain aliens to shoot
-        margin = 0
+        margin = 10
         for alien in self.aliensList:
             
             # If alien is within player's x-position, then fire a bullet
             if (alien.xPosition > player.xPosition - margin and
                 alien.xPosition < player.xPosition + player.LENGTH + margin):
 
-                    # Exit if 5 bullets were already taken.
-                    if len(self.alienBulletsList) >= 5:
+                    # Exit if certain amount of bullets were already taken.
+                    if len(self.alienBulletsList) >= self.aliensFiringRate:
                         break
 
                     self.alienBulletsList.append(Bullet(self, alien.xPosition + (alien.LENGTH // 2), alien.yPosition))
+
+    def adjustAliensFiringRate(self):
+
+        # OBJECTIVE: Adjust firing rate of bullets based on how many aliens were destroyed
+
+        # If-condition was added to stop increasing firing rate, if "self.aliensDestroyed" was stuck on a multiple of 5
+        if self.currAliensDestroyed != self.oldAliensDestroyed:
+
+            # For every 5th alien destoryed, allow 3 more aliens to shoot
+            if self.currAliensDestroyed % 5 == 0:
+
+                # Update firing rate
+                self.aliensFiringRate += 3
+
+                # Update placeholder
+                self.oldAliensDestroyed = self.currAliensDestroyed
 
     def alienCollision(self):
 
@@ -207,6 +231,9 @@ class Game:
 
             # Delete aliens that were hit by bullets
             self.alienCollision()
+
+            # Adjust aliens' firing rate
+            self.adjustAliensFiringRate()
 
             # Let the aliens fireback
             self.alienFiresBullet(player)

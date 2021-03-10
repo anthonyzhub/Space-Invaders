@@ -122,12 +122,14 @@ class Alien:
                     print("Alien, {}, got hit".format(self))
 
                     # Remove and delete bullet from list
+                    # NOTE: del and remove() both remove x element
                     self.game.heroBulletsList.remove(firedBullet)
-                    # del firedBullet # NOTE <= del and remove() both remove x element
 
                     # Remove and delete alien from list
                     self.game.aliensList.remove(self)
-                    # del self
+                    
+                    # Increment aliens' destroyed counter
+                    self.game.currAliensDestroyed += 1
 
 class Generator:
 
