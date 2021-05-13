@@ -59,6 +59,7 @@ class Player(pygame.sprite.Sprite):
 
         # OBJECTIVE: Check if ship got hit by alien bullets
 
+        # Go through each bullet that was fired by hero
         for firedBullet in self.game.alienBulletsList:
 
             if (firedBullet.xPosition > self.xPosition and

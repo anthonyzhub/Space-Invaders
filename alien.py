@@ -112,6 +112,8 @@ class Alien:
 
         # OBJECTIVE: Delete alien if a bullet hits it
 
+        # Go through each bullet that was fired by hero
+        # NOTE: Check how many hero bullets have hit an alien
         for firedBullet in self.game.heroBulletsList:
 
             if (firedBullet.xPosition > self.xPosition and

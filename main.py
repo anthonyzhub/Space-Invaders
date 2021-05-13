@@ -63,7 +63,7 @@ class Game:
             alien.draw()
 
         for heroBullet in self.heroBulletsList:
-            heroBullet.draw()
+            heroBullet.drawForHero()
 
         for alienBullet in self.alienBulletsList:
             alienBullet.drawForAlien()
