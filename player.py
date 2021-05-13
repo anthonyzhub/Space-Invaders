@@ -1,8 +1,8 @@
 import pygame
 
-WHITE = (255, 255, 255)
-BLACK = (0, 0, 0)
 RED = (255, 0, 0)
+ORANGE = (255, 140, 0)
+GOLD = (255, 165, 0)
 
 SCREEN_LENGTH = 840
 SCREEN_HEIGHT = 720
@@ -29,8 +29,19 @@ class Player(pygame.sprite.Sprite):
 
         # OBJECTIVE: Draw ship on screen
         
+        # Draw ship's dimensions
         spriteSpecs = pygame.Rect(self.xPosition, self.yPosition, self.LENGTH, self.HEIGHT)
-        pygame.draw.rect(self.game.screen, RED, spriteSpecs)
+
+        # Change ship's color based on how many lives are left
+        if self.lives == 3:
+            shipColor = GOLD
+        elif self.lives == 2:
+            shipColor = ORANGE
+        else:
+            shipColor = RED
+
+        # Draw ship on the screen
+        pygame.draw.rect(self.game.screen, shipColor, spriteSpecs)
 
     def moveLeft(self):
 
@@ -48,6 +59,7 @@ class Player(pygame.sprite.Sprite):
 
         # OBJECTIVE: Check if ship got hit by alien bullets
 
+        # Go through each bullet that was fired by hero
         for firedBullet in self.game.alienBulletsList:
 
             if (firedBullet.xPosition > self.xPosition and
@@ -69,21 +81,3 @@ class Player(pygame.sprite.Sprite):
             return False
 
         return True
-
-# class Bullet:
-
-#     def __init__(self, game, xPosition, yPosition):
-
-#         # Declare variables
-#         self.game = game
-#         self.xPosition = xPosition
-#         self.yPosition = yPosition
-
-#     def draw(self):
-
-#         # Draw bullet on screen
-#         spriteSpec = pygame.Rect(self.xPosition, self.yPosition, 2, 4)
-#         pygame.draw.rect(self.game.screen, WHITE, spriteSpec)
-
-#         # Adjust speed
-#         self.yPosition -= 2

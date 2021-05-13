@@ -14,7 +14,7 @@ class Bullet:
         self.xPosition = xPosition
         self.yPosition = yPosition
 
-    def draw(self):
+    def drawForHero(self):
 
         # OBJECTIVE: Draw bullet for player
 

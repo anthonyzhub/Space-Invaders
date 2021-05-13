@@ -37,7 +37,6 @@ class Barrier:
             spriteSpecs = pygame.Rect(self.xPosition, self.yPosition, self.LENGTH - 25, self.HEIGHT)
             pygame.draw.rect(self.game.screen, PURPLE, spriteSpecs)
 
-        # elif self.lives == 1:
         else:
 
             # Draw dimensions and sprite
@@ -57,6 +56,7 @@ class Barrier:
         elif self.lives == 1:
             currLength = self.LENGTH - 50
 
+        # Go through each bullet that was fired by aliens
         for firedBullet in self.game.alienBulletsList:
 
             if (firedBullet.xPosition > self.xPosition and
