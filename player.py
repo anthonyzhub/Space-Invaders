@@ -70,6 +70,9 @@ class Player(pygame.sprite.Sprite):
                 # Remove alien bullet
                 self.game.alienBulletsList.remove(firedBullet)
 
+                # Play explosion sound effect
+                self.game.playExplosionSoundEffect()
+
                 # Remove one life from player
                 self.lives -= 1
 

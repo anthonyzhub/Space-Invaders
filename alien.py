@@ -133,6 +133,9 @@ class Alien:
                     # Remove and delete alien from list
                     self.game.aliensList.remove(self)
                     
+                    # Play explosion sound effect
+                    self.game.playExplosionSoundEffect()
+
                     # Increment aliens' destroyed counter
                     self.game.currAliensDestroyed += 1
 

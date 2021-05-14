@@ -10,6 +10,7 @@ from alien import Alien
 from alien import Generator as aGenerator
 from barrier import Barrier
 from barrier import Generator as bGenerator
+from music import Music
 
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
@@ -49,10 +50,8 @@ class Game:
         # Initialize pygame's clock for FPS
         self.clock = pygame.time.Clock()
 
-        # Initialize pygame mixer() and load song
-        pygame.mixer.init()
-        pygame.mixer.music.load("One-Must-Fall-2097-remix.wav")
-        pygame.mixer.music.play(-1) # <= Play in an infinite loop
+        # Initialize sound effects and background music
+        self.music = Music()
 
         # Boolean variable to start/stop game
         self.continueGame = True
@@ -202,6 +201,11 @@ class Game:
         if player.livesLeft() == False:
             print("Game Over!")
             self.continueGame = False
+
+    def playExplosionSoundEffect(self):
+
+        # OBJECTIVE: Play exploding sound effect when an alien gets hit
+        self.music.playExplosion()
 
     def mainLoop(self):
 
