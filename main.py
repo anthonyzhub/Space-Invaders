@@ -49,6 +49,11 @@ class Game:
         # Initialize pygame's clock for FPS
         self.clock = pygame.time.Clock()
 
+        # Initialize pygame mixer() and load song
+        pygame.mixer.init()
+        pygame.mixer.music.load("One-Must-Fall-2097-remix.wav")
+        pygame.mixer.music.play(-1) # <= Play in an infinite loop
+
         # Boolean variable to start/stop game
         self.continueGame = True
 
