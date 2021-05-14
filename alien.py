@@ -123,6 +123,9 @@ class Alien:
 
                     print("Alien, {}, got hit".format(self))
 
+                    # Update "score" variable in Game class
+                    self.game.score += 5
+
                     # Remove and delete bullet from list
                     # NOTE: del and remove() both remove x element
                     self.game.heroBulletsList.remove(firedBullet)
@@ -144,7 +147,7 @@ class Generator:
         # NOTE: Aliens are created from top to bottom, then moves on to next column
         # Create more aliens
         for xAxis in range(margin, game.width - margin, width): # range(start, stop, jump)
-            for yAxis in range(margin, game.height // 2, width):
+            for yAxis in range(margin + 25, game.height // 2, width): # <= Added 25 to generate aliens at a higher Y-value
                 
                 # Create a new instance of alien and add it to game's list
                 game.aliensList.append(Alien(game, xAxis, yAxis))

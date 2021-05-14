@@ -31,6 +31,9 @@ class Game:
     aliensFiringRate = 5
     oldAliensDestroyed = currAliensDestroyed
 
+    # Declare a variable for scoreboard
+    score = 0
+
     def __init__(self, width, height):
 
         # Initialize pygame
@@ -45,6 +48,11 @@ class Game:
 
         # Initialize pygame's clock for FPS
         self.clock = pygame.time.Clock()
+
+        # Initialize pygame mixer() and load song
+        pygame.mixer.init()
+        pygame.mixer.music.load("One-Must-Fall-2097-remix.wav")
+        pygame.mixer.music.play(-1) # <= Play in an infinite loop
 
         # Boolean variable to start/stop game
         self.continueGame = True
@@ -70,6 +78,12 @@ class Game:
 
         for barrier in self.barriersList:
             barrier.draw()
+
+        # Draw scoreboard
+        font = pygame.font.Font(None, 50)
+        text = font.render(str(self.score), True, WHITE)
+        textDimensions = (self.width // 2, 5) # X & Y coordinates
+        self.screen.blit(text, textDimensions)
 
         # Update screen
         pygame.display.flip()
